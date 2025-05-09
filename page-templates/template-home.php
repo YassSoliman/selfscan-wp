@@ -48,15 +48,14 @@ get_header();
                 $hero_button = get_field('hero_button_cta');
                 $button_text = isset($hero_button['title']) ? $hero_button['title'] : (get_field('hero_button_text') ?: 'Start Background Check');
                 $button_url = isset($hero_button['url']) ? $hero_button['url'] : (get_field('hero_button_url') ?: '#');
+                
+                // Use the CTA button template part instead of hardcoding
+                get_template_part('template-parts/cta-button', null, array(
+                    'url' => $button_url,
+                    'text' => $button_text,
+                    'class' => 'hero-home__button button-red',
+                ));
                 ?>
-                <a href="<?php echo esc_url($button_url); ?>" class="hero-home__button button button-red">
-                    <span class="button__text">
-                        <?php echo esc_html($button_text); ?>
-                    </span>
-                    <span class="button__icon">
-                        <?php selfscan_inline_svg(get_template_directory_uri() . '/img/icons/arrow-right.svg', ['class' => 'button__icon-svg']); ?>
-                    </span>
-                </a>
             </div>
             <div class="hero-home__decor">
                 <?php 
@@ -385,15 +384,14 @@ get_template_part('template-parts/faq-module');
             $cta_button = get_field('cta_button_url');
             $cta_text = isset($cta_button['title']) ? $cta_button['title'] : (get_field('cta_button_text') ?: 'Start Background Check');
             $cta_url = isset($cta_button['url']) ? $cta_button['url'] : (get_field('cta_button_url') ?: '#');
+            
+            // Use the CTA button template part
+            get_template_part('template-parts/cta-button', null, array(
+                'url' => $cta_url,
+                'text' => $cta_text,
+                'class' => 'get-started__button button-red',
+            ));
             ?>
-            <a href="<?php echo esc_url($cta_url); ?>" class="get-started__button button button-red">
-                <span class="button__text">
-                    <?php echo esc_html($cta_text); ?>
-                </span>
-                <span class="button__icon">
-                    <?php selfscan_inline_svg(get_template_directory_uri() . '/img/icons/arrow-right.svg', ['class' => 'button__icon-svg']); ?>
-                </span>
-            </a>
         </div>
     </div>
 </section>

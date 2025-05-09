@@ -96,17 +96,16 @@ get_template_part('template-parts/faq-module');
             </div>
             <?php 
             $cta_button = get_field('faq_cta_button');
-            $button_text = isset($cta_button['title']) ? $cta_button['title'] : (get_field('faq_cta_button_text') ?: 'Start Background Check');
-            $button_url = isset($cta_button['url']) ? $cta_button['url'] : (get_field('faq_cta_button_url') ?: '#');
+            $cta_text = isset($cta_button['title']) ? $cta_button['title'] : (get_field('faq_cta_button_text') ?: 'Start Background Check');
+            $cta_url = isset($cta_button['url']) ? $cta_button['url'] : (get_field('faq_cta_button_url') ?: '#');
+            
+            // Use the CTA button template part
+            get_template_part('template-parts/cta-button', null, array(
+                'url' => $cta_url,
+                'text' => $cta_text,
+                'class' => 'get-started__button button-red',
+            ));
             ?>
-            <a href="<?php echo esc_url($button_url); ?>" class="get-started__button button button-red">
-                <span class="button__text">
-                    <?php echo esc_html($button_text); ?>
-                </span>
-                <span class="button__icon">
-                    <?php selfscan_inline_svg(get_template_directory_uri() . '/img/icons/arrow-right.svg', ['class' => 'button__icon-svg']); ?>
-                </span>
-            </a>
         </div>
     </div>
 </section>

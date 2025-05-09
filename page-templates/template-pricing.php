@@ -21,18 +21,17 @@ get_header();
                 <?php echo esc_html(get_field('pricing_subtitle') ?: 'Get fast, secure, and accurate criminal background checks from a trusted Canadian provider. Our service searches adult convictions listed in the Canadian Police Information Centre (CPIC) and other national police databases.'); ?>
             </div>
             <?php 
-            $hero_button = get_field('pricing_button');
-            $button_text = isset($hero_button['title']) ? $hero_button['title'] : 'Get Started';
-            $button_url = isset($hero_button['url']) ? $hero_button['url'] : '#';
+            $cta_button = get_field('pricing_button');
+            $cta_text = isset($hero_button['title']) ? $hero_button['title'] : 'Get Started';
+            $cta_url = isset($hero_button['url']) ? $hero_button['url'] : '#';
+            
+            // Use the CTA button template part
+            get_template_part('template-parts/cta-button', null, array(
+                'url' => $cta_url,
+                'text' => $cta_text,
+                'class' => 'pricing-hero__button button-red',
+            ));
             ?>
-            <a href="<?php echo esc_url($button_url); ?>" class="pricing-hero__button button button-red">
-                <span class="button__text">
-                    <?php echo esc_html($button_text); ?>
-                </span>
-                <span class="button__icon">
-                    <?php selfscan_inline_svg(get_template_directory_uri() . '/img/icons/arrow-right.svg', ['class' => 'button__icon-svg']); ?>
-                </span>
-            </a>
         </div>
     </div>
 </section>
@@ -176,17 +175,16 @@ get_header();
             </div>
             <?php 
             $cta_button = get_field('pricing_cta_button');
-            $button_text = isset($cta_button['title']) ? $cta_button['title'] : 'Start Background Check';
-            $button_url = isset($cta_button['url']) ? $cta_button['url'] : '#';
+            $cta_text = isset($cta_button['title']) ? $cta_button['title'] : 'Start Background Check';
+            $cta_url = isset($cta_button['url']) ? $cta_button['url'] : '#';
+            
+            // Use the CTA button template part
+            get_template_part('template-parts/cta-button', null, array(
+                'url' => $cta_url,
+                'text' => $cta_text,
+                'class' => 'get-started__button button-red',
+            ));
             ?>
-            <a href="<?php echo esc_url($button_url); ?>" class="get-started__button button button-red">
-                <span class="button__text">
-                    <?php echo esc_html($button_text); ?>
-                </span>
-                <span class="button__icon">
-                    <?php selfscan_inline_svg(get_template_directory_uri() . '/img/icons/arrow-right.svg', ['class' => 'button__icon-svg']); ?>
-                </span>
-            </a>
         </div>
     </div>
 </section>

@@ -142,11 +142,6 @@ function selfscan_scripts() {
 	if ( file_exists( get_template_directory() . '/build/js/main.js' ) ) {
 		wp_enqueue_style( 'selfscan-main-style', get_template_directory_uri() . '/build/css/main.css', array(), filemtime( get_template_directory() . '/build/css/main.css' ) );
 		wp_enqueue_script( 'selfscan-main-js', get_template_directory_uri() . '/build/js/main.js', array(), filemtime( get_template_directory() . '/build/js/main.js' ), true );
-	} else {
-		// Fallback to original theme styles if compiled assets don't exist
-		wp_enqueue_style( 'selfscan-style', get_stylesheet_uri(), array(), _S_VERSION );
-		wp_style_add_data( 'selfscan-style', 'rtl', 'replace' );
-		wp_enqueue_script( 'selfscan-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
 	}
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -206,3 +201,21 @@ function selfscan_register_menus() {
 }
 add_action( 'after_setup_theme', 'selfscan_register_menus' );
 
+add_action('wp_head', 'google_tag_manager_head', 20);
+function google_tag_manager_head() { ?>
+	 <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KQ58DJG');</script>
+    <!-- End Google Tag Manager -->
+<?php }
+
+add_action('tb_before_header', 'google_tag_manager_body', 100);
+function google_tag_manager_body() { ?>
+	<!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KQ58DJG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+<?php }
