@@ -34,19 +34,19 @@
                             <div class="footer__partners">
                                 <?php 
                                 // Partner 1
-                                $partner1_id = get_theme_mod('footer_partner_1', 14);
+                                $partner1_id = get_theme_mod('footer_partner_1', 134);
                                 if ($partner1_id) : ?>
                                 <div class="footer__partner">
-                                    <?php echo wp_get_attachment_image($partner1_id, 'full', false, ['loading' => 'lazy', 'alt' => 'partner']); ?>
+                                    <?php echo wp_get_attachment_image($partner1_id, 'full', false, ['loading' => 'lazy', 'alt' => 'partner logo']); ?>
                                 </div>
                                 <?php endif; ?>
                                 
                                 <?php 
                                 // Partner 2
-                                $partner2_id = get_theme_mod('footer_partner_2', 15);
+                                $partner2_id = get_theme_mod('footer_partner_2', 133);
                                 if ($partner2_id) : ?>
                                 <div class="footer__partner">
-                                    <?php echo wp_get_attachment_image($partner2_id, 'full', false, ['loading' => 'lazy', 'alt' => 'partner']); ?>
+                                    <?php echo wp_get_attachment_image($partner2_id, 'full', false, ['loading' => 'lazy', 'alt' => 'partner logo']); ?>
                                 </div>
                                 <?php endif; ?>
                             </div>
@@ -62,25 +62,7 @@
                                     'walker'         => new SelfScan_Walker_Footer_Right_Menu(),
                                     'fallback_cb'    => false,
                                 ));
-                            } else {
-                                // Fallback if no menu is set - create simple example structure
-                                ?>
-                                <div class="footer__item">
-                                    <h2 class="footer__label">EMAIL SUPPORT</h2>
-                                    <a href="mailto:info@selfscan.ca" class="footer__link">
-                                        info@selfscan.ca
-                                    </a>
-                                </div>
-                                <div class="footer__item">
-                                    <h2 class="footer__label">CONNECT</h2>
-                                    <a href="#" class="footer__link">
-                                        LinkedIn
-                                    </a>
-                                    <a href="#" class="footer__link">
-                                        Facebook
-                                    </a>
-                                </div>
-                            <?php } ?>
+                            } ?>
                         </div>
                     </div>
                     <div class="footer__bottom">
@@ -98,18 +80,7 @@
                                     'walker'         => new SelfScan_Walker_Footer_Menu(),
                                     'fallback_cb'    => false,
                                 ));
-                            } else {
-                                // Fallback to static menu
-                                ?>
-                                <ul class='footer-menu__list'>
-                                    <li class='footer-menu__item'>
-                                        <a href='<?php echo esc_url(get_privacy_policy_url()); ?>' class='footer-menu__link'>Privacy Policy</a>
-                                    </li>
-                                    <li class='footer-menu__item'>
-                                        <a href='#' class='footer-menu__link'>Terms of Service</a>
-                                    </li>
-                                </ul>
-                            <?php } ?>
+                            } ?>
                         </nav>
                     </div>
                 </div>

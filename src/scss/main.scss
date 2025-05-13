@@ -236,7 +236,7 @@ Version: 1.0.0
   }
   
   .top-section {
-    background: #ac000a;
+    background: #000;
     padding-block: 1.3125rem;
     margin-bottom: 1.875rem;
   }
@@ -322,18 +322,15 @@ Version: 1.0.0
     top: 32px;
   }
   
-  /* Mobile admin bar is smaller at 782px and below */
-  @media screen and (max-width: 782px) {
-    .admin-bar .header.is-sticky {
-      top: 46px;
-    }
-  }
-  
   @media (max-width: 768px) {
     .header.is-sticky {
       margin-top: 0;
       padding-top: 0.5rem;
       padding-bottom: 0.5rem;
+    }
+
+    .admin-bar .header.is-sticky {
+      top: 0;
     }
   }
   .header.is-sticky .header__body {
@@ -477,25 +474,17 @@ Version: 1.0.0
       color: #ac000a;
     }
   }
-  .menu-header__link._active {
-    position: relative;
-    color: #ac000a;
-  }
-  .menu-header__link._active::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 1px;
-    bottom: -0.75rem;
-    left: 0;
-    background: #ac000a;
-  }
   .menu-header__link.button {
     font-size: 1rem;
   }
   @media (max-width: 768px) {
     .menu-header__link.button {
       font-size: 1.5rem;
+    }
+  }
+  @media (max-width: 420px) {
+    .menu-header__link.button.button-red {
+      width: fit-content;
     }
   }
   
@@ -1245,13 +1234,9 @@ Version: 1.0.0
       gap: calc(1.25rem + 1.25rem * (100vw - 20rem) / 70);
     }
   }
-  .footer__partner:last-child {
-    width: 2.6rem;
-    height: 2.6rem;
-  }
-  .footer__partner:first-child {
-    width: 6.125rem;
-    height: 2.6rem;
+  .footer__partner {
+    width: 6rem;
+    height: 6rem;
   }
   .footer__action {
     font-size: 0.9375rem;
@@ -2071,16 +2056,6 @@ Version: 1.0.0
   bottom: -0.75rem;
   left: 0;
   background: #ac000a;
-}
-
-.menu-header__link.button {
-  font-size: 1rem;
-}
-
-@media (max-width: 768px) {
-  .menu-header__link.button {
-    font-size: 1.5rem;
-  }
 }
 
 /* Body styles when menu is open */

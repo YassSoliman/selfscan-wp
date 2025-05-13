@@ -46,13 +46,10 @@ get_header();
                 </ul>
                 <?php 
                 $hero_button = get_field('hero_button_cta');
-                $button_text = isset($hero_button['title']) ? $hero_button['title'] : (get_field('hero_button_text') ?: 'Start Background Check');
-                $button_url = isset($hero_button['url']) ? $hero_button['url'] : (get_field('hero_button_url') ?: '#');
                 
                 // Use the CTA button template part instead of hardcoding
                 get_template_part('template-parts/cta-button', null, array(
-                    'url' => $button_url,
-                    'text' => $button_text,
+                    'cta_button' => $hero_button,
                     'class' => 'hero-home__button button-red',
                 ));
                 ?>
@@ -381,14 +378,11 @@ get_template_part('template-parts/faq-module');
                 </p>
             </div>
             <?php 
-            $cta_button = get_field('cta_button_url');
-            $cta_text = isset($cta_button['title']) ? $cta_button['title'] : (get_field('cta_button_text') ?: 'Start Background Check');
-            $cta_url = isset($cta_button['url']) ? $cta_button['url'] : (get_field('cta_button_url') ?: '#');
+            $cta_button = get_field('cta_button_url');  
             
             // Use the CTA button template part
             get_template_part('template-parts/cta-button', null, array(
-                'url' => $cta_url,
-                'text' => $cta_text,
+                'cta_button' => $cta_button,
                 'class' => 'get-started__button button-red',
             ));
             ?>

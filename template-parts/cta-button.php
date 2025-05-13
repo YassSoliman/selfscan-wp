@@ -5,23 +5,31 @@
  * @package SelfScan
  * 
  * Parameters:
- * $args['url'] - Button URL
- * $args['text'] - Button text
+ * $args['cta_button'] - ACF link field (contains url, title, target)
  * $args['class'] - Additional CSS classes
- * $args['cta_label'] - Optional tracking label for analytics
  * $args['icon'] - Whether to show the arrow icon (default: true)
  */
 
 // Set defaults and extract variables
 $defaults = array(
-    'url' => '#',
-    'text' => 'Start Background Check',
+    'cta_button' => null,
     'class' => 'button-red',
     'icon' => true
 );
 
 // Merge defaults with provided args
 $args = wp_parse_args($args, $defaults);
+
+// Extract data from ACF link field
+$url = '';
+$text = '';
+$target = '';
+
+if (is_array($args['cta_button']) && !empty($args['cta_button'])) {
+    $url = isset($args['cta_button']['url']) ? $args['cta_button']['url'] : '';
+    $text = isset($args['cta_button']['title']) ? $args['cta_button']['title'] : '';
+    $target = isset($args['cta_button']['target']) ? $args['cta_button']['target'] : '';
+}
 
 // Build the class attribute
 $button_class = 'button ' . esc_attr($args['class']);
@@ -32,13 +40,21 @@ if (strpos($args['class'], 'hero-home__button') === false &&
     strpos($args['class'], 'pricing-hero__button') === false) {
     $button_class .= ' cta-button';
 }
+
+// Set target attribute and rel for security if opening in new tab
+$target_attr = '';
+$rel_attr = '';
+if (!empty($target)) {
+    $target_attr = ' target="' . esc_attr($target) . '"';
+    $rel_attr = ' rel="noopener noreferrer"';
+}
 ?>
 
-<a href="<?php echo esc_url($args['url']); ?>" 
-   class="<?php echo esc_attr($button_class); ?>"
+<a href="<?php echo esc_url($url); ?>" 
+   class="<?php echo esc_attr($button_class); ?>"<?php echo $target_attr . $rel_attr; ?>
    data-track-cta>
     <span class="button__text">
-        <?php echo esc_html($args['text']); ?>
+        <?php echo esc_html($text); ?>
     </span>
     <?php if ($args['icon']) : ?>
     <span class="button__icon">

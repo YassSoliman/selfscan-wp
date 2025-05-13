@@ -68,19 +68,7 @@
 										'walker'         => new SelfScan_Walker_Nav_Menu(),
 										'fallback_cb'    => false,
 									));
-								} else {
-									// Fallback to static menu if no menu is set
-									?>
-									<li class="menu-header__item">
-										<a href="<?php echo esc_url(home_url('/pricing')); ?>" class="menu-header__link<?php if (is_page('pricing')) echo ' _active'; ?>">Pricing</a>
-									</li>
-									<li class="menu-header__item">
-										<a href="<?php echo esc_url(home_url('/faq')); ?>" class="menu-header__link<?php if (is_page('faq')) echo ' _active'; ?>">FAQ</a>
-									</li>
-									<li class="menu-header__item">
-										<a href="<?php echo esc_url(home_url('/get-started')); ?>" class="menu-header__link button<?php if (is_page('get-started')) echo ' _active'; ?>">Get Started</a>
-									</li>
-								<?php } ?>
+								} ?>
 							</ul>
 						</nav>
 						
@@ -118,19 +106,7 @@
 						'walker'         => new SelfScan_Walker_Nav_Menu(),
 						'fallback_cb'    => false,
 					));
-				} else {
-					// Fallback to static menu if no menu is set
-					?>
-					<li class="menu-header__item">
-						<a href="<?php echo esc_url(home_url('/pricing')); ?>" class="menu-header__link<?php if (is_page('pricing')) echo ' _active'; ?>">Pricing</a>
-					</li>
-					<li class="menu-header__item">
-						<a href="<?php echo esc_url(home_url('/faq')); ?>" class="menu-header__link<?php if (is_page('faq')) echo ' _active'; ?>">FAQ</a>
-					</li>
-					<li class="menu-header__item">
-						<a href="<?php echo esc_url(home_url('/get-started')); ?>" class="menu-header__link button<?php if (is_page('get-started')) echo ' _active'; ?>">Get Started</a>
-					</li>
-				<?php } ?>
+				} ?>
 				
 				<li class="menu-header__item menu-header__item-social">
 					<?php
@@ -143,16 +119,7 @@
 							'walker'         => new SelfScan_Walker_Social_Menu(),
 							'fallback_cb'    => false,
 						));
-					} else {
-						// Fallback to static social icons if no menu is set
-						?>
-						<a href="#" class="menu-header__link">
-							<?php selfscan_inline_svg(get_template_directory_uri() . '/img/icons/linkedin.svg', ['class' => 'menu-header__icon']); ?>
-						</a>
-						<a href="#" class="menu-header__link">
-							<?php selfscan_inline_svg(get_template_directory_uri() . '/img/icons/facebook.svg', ['class' => 'menu-header__icon']); ?>
-						</a>
-					<?php } ?>
+					} ?>
 				</li>
 			</ul>
 		</div>
