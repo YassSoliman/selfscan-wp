@@ -53,6 +53,7 @@ get_header();
                     'class' => 'hero-home__button button-red',
                 ));
                 ?>
+                <span class="disclaimer">Secure, trusted and SOC2 compliant</span>
             </div>
             <div class="hero-home__decor">
                 <?php 

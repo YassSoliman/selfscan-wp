@@ -41,6 +41,12 @@ Version: 1.0.0
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
   }
+
+  @media (max-width: 768px) {
+    html, body {
+      font-size: calc((0.625rem + 0.41667vw) * 0.75);
+    }
+  }
   
   input, button, textarea {
     font-family: inherit;
@@ -178,6 +184,11 @@ Version: 1.0.0
             align-items: center;
     gap: 0.75rem;
     font-size: 1.25rem;
+  }
+  @media (max-width: 768px) {
+    .button-red {
+      font-size: 2rem;
+    }
   }
   @media (max-width: 420px) {
     .button-red {
@@ -2062,4 +2073,10 @@ Version: 1.0.0
 body.menu-is-active {
   overflow: hidden;
   touch-action: none;
+}
+
+.disclaimer {
+  display: block;
+  font-size: 0.85rem;
+  padding-left: 1.5rem;
 }
