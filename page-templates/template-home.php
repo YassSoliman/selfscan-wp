@@ -53,7 +53,12 @@ get_header();
                     'class' => 'hero-home__button button-red',
                 ));
                 ?>
-                <span class="disclaimer">Secure, trusted and SOC2 compliant</span>
+                <?php 
+                $disclaimer = get_field('cta_disclaimer_text'); // Secure, trusted and SOC2 compliant
+                if ($disclaimer) :
+                ?>
+                <span class="disclaimer"><?php echo wp_kses_post($disclaimer); ?></span>
+                <?php endif; ?>
             </div>
             <div class="hero-home__decor">
                 <?php 
@@ -213,7 +218,7 @@ get_header();
                     </div>
                     <div class="how-works__details">
                         <p>
-                            <?php echo esc_html($step['desc']); ?>
+                            <?php echo wp_kses_post($step['desc']); ?>
                         </p>
                     </div>
                 </article>
