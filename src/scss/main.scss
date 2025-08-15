@@ -41,6 +41,12 @@ Version: 1.0.0
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
   }
+
+  @media (max-width: 768px) {
+    html, body {
+      font-size: calc((0.625rem + 0.41667vw) * 0.75);
+    }
+  }
   
   input, button, textarea {
     font-family: inherit;
@@ -66,10 +72,12 @@ Version: 1.0.0
   
   a, a:visited {
     text-decoration: none;
+	color: #ac000a;
   }
   
   a:hover {
     text-decoration: none;
+	color: #000000;
   }
   
   ul li {
@@ -168,8 +176,9 @@ Version: 1.0.0
       border-color: #000;
     }
   }
-  .button-red {
+  a.button-red, a.button-red:visited {
     background: #ac000a;
+    color: #fff;
     display: -webkit-inline-box;
     display: -ms-inline-flexbox;
     display: inline-flex;
@@ -179,30 +188,35 @@ Version: 1.0.0
     gap: 0.75rem;
     font-size: 1.25rem;
   }
-  @media (max-width: 420px) {
+  @media (max-width: 768px) {
     .button-red {
+      font-size: 2rem;
+    }
+  }
+  @media (max-width: 420px) {
+    a.button-red {
       -webkit-box-pack: justify;
           -ms-flex-pack: justify;
               justify-content: space-between;
       width: 100%;
     }
   }
-  .button-red .button__icon {
+  a.button-red .button__icon {
     color: #fff;
     -webkit-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
   }
-  .button-red .button__icon svg {
+  a.button-red .button__icon svg {
     width: 1.25rem;
     height: 1.25rem;
   }
   @media (any-hover: hover) {
-    .button-red:hover {
+    a.button-red:hover {
       background: transparent;
       color: #ac000a;
       border-color: #ac000a;
     }
-    .button-red:hover .button__icon {
+    a.button-red:hover .button__icon {
       color: #ac000a;
     }
   }
@@ -2062,4 +2076,10 @@ Version: 1.0.0
 body.menu-is-active {
   overflow: hidden;
   touch-action: none;
+}
+
+.disclaimer {
+  display: block;
+  font-size: 0.85rem;
+  padding-left: 1.5rem;
 }
