@@ -219,3 +219,53 @@ function google_tag_manager_body() { ?>
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 <?php }
+
+/**
+ * AJAX handler for getting attachment URL
+ */
+function selfscan_get_attachment_url() {
+    $attachment_id = intval($_POST['attachment_id']);
+    
+    if (!$attachment_id) {
+        wp_send_json_error('Invalid attachment ID');
+        return;
+    }
+    
+    $url = wp_get_attachment_image_url($attachment_id, 'full');
+    
+    if ($url) {
+        wp_send_json_success(array('url' => $url));
+    } else {
+        wp_send_json_error('Attachment not found');
+    }
+}
+add_action('wp_ajax_get_attachment_url', 'selfscan_get_attachment_url');
+add_action('wp_ajax_nopriv_get_attachment_url', 'selfscan_get_attachment_url');
+
+/**
+ * AJAX handler for getting complete attachment image HTML (like wp_get_attachment_image)
+ */
+function selfscan_get_attachment_image() {
+    $attachment_id = intval($_POST['attachment_id']);
+    
+    if (!$attachment_id) {
+        wp_send_json_error('Invalid attachment ID');
+        return;
+    }
+    
+    $img_attrs = array(
+        'loading' => 'lazy',
+        'alt' => 'partner logo',
+        'data-image-id' => $attachment_id
+    );
+    
+    $image_html = wp_get_attachment_image($attachment_id, 'full', false, $img_attrs);
+    
+    if ($image_html) {
+        wp_send_json_success(array('html' => $image_html));
+    } else {
+        wp_send_json_error('Attachment not found');
+    }
+}
+add_action('wp_ajax_get_attachment_image', 'selfscan_get_attachment_image');
+add_action('wp_ajax_nopriv_get_attachment_image', 'selfscan_get_attachment_image');

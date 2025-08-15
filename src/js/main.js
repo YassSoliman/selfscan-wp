@@ -6,11 +6,15 @@ import initNavigation from './nav';
 import initSwipers from './swiper';
 import initTracking from './tracking';
 import initAccordion from './accordion';
+import initLanguageSwitcher from './language-switcher';
 
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
 	// Initialize navigation (mobile menu, sticky header)
 	initNavigation();
+	
+	// Initialize language switcher
+	initLanguageSwitcher();
 	
 	// Initialize accordion/spollers
 	initAccordion();

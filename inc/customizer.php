@@ -139,45 +139,32 @@ function selfscan_customize_register( $wp_customize ) {
 		)
 	);
 
-	// Footer Partners Images
+	// Load repeater control class
+	require_once get_template_directory() . '/inc/class-customizer-repeater-control.php';
+	
+	// Footer Partners Repeater
 	$wp_customize->add_setting(
 		'footer_partner_1',
 		array(
 			'default'           => '',
-			'sanitize_callback' => 'absint',
+			'sanitize_callback' => 'sanitize_text_field',
+			'transport'         => 'postMessage',
 		)
 	);
 
 	$wp_customize->add_control(
-		new WP_Customize_Media_Control(
+		new SelfScan_Repeater_Control(
 			$wp_customize,
 			'footer_partner_1',
 			array(
-				'label'     => __( 'Footer Partner 1', 'selfscan' ),
-				'section'   => 'selfscan_footer_section',
-				'settings'  => 'footer_partner_1',
-				'mime_type' => 'image',
-			)
-		)
-	);
-
-	$wp_customize->add_setting(
-		'footer_partner_2',
-		array(
-			'default'           => '',
-			'sanitize_callback' => 'absint',
-		)
-	);
-
-	$wp_customize->add_control(
-		new WP_Customize_Media_Control(
-			$wp_customize,
-			'footer_partner_2',
-			array(
-				'label'     => __( 'Footer Partner 2', 'selfscan' ),
-				'section'   => 'selfscan_footer_section',
-				'settings'  => 'footer_partner_2',
-				'mime_type' => 'image',
+				'label'       => __( 'Footer Partners', 'selfscan' ),
+				'description' => __( 'Add partner logos to display in the footer. You can set custom width and height for each logo.', 'selfscan' ),
+				'section'     => 'selfscan_footer_section',
+				'settings'    => 'footer_partner_1',
+				'button_labels' => array(
+					'add'    => __( 'Add Partner Logo', 'selfscan' ),
+					'remove' => __( 'Remove Partner', 'selfscan' ),
+				),
 			)
 		)
 	);
@@ -206,6 +193,6 @@ function selfscan_customize_partial_blogdescription() {
  * Binds JS handlers to make Theme Customizer preview reload changes asynchronously.
  */
 function selfscan_customize_preview_js() {
-	wp_enqueue_script( 'selfscan-customizer', get_template_directory_uri() . '/js/customizer.js', array( 'customize-preview' ), _S_VERSION, true );
+	wp_enqueue_script( 'selfscan-customizer-preview', get_template_directory_uri() . '/build/js/customizer-preview.js', array( 'customize-preview' ), filemtime( get_template_directory() . '/build/js/customizer-preview.js' ), true );
 }
 add_action( 'customize_preview_init', 'selfscan_customize_preview_js' );

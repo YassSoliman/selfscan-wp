@@ -59,6 +59,11 @@
 						<nav class="desktop-nav">
 							<ul class="desktop-nav__list">
 								<?php
+								// Display language switcher
+								if (function_exists('selfscan_render_language_switcher')) {
+									selfscan_render_language_switcher('desktop');
+								}
+								
 								// Display primary menu
 								if (has_nav_menu('primary')) {
 									wp_nav_menu(array(
@@ -108,19 +113,27 @@
 					));
 				} ?>
 				
+				<?php
+				// Display social menu only if it exists
+				if (has_nav_menu('social-menu')) : ?>
 				<li class="menu-header__item menu-header__item-social">
 					<?php
-					// Display social menu
-					if (has_nav_menu('social-menu')) {
-						wp_nav_menu(array(
-							'theme_location' => 'social-menu',
-							'container'      => false,
-							'items_wrap'     => '%3$s',
-							'walker'         => new SelfScan_Walker_Social_Menu(),
-							'fallback_cb'    => false,
-						));
-					} ?>
+					wp_nav_menu(array(
+						'theme_location' => 'social-menu',
+						'container'      => false,
+						'items_wrap'     => '%3$s',
+						'walker'         => new SelfScan_Walker_Social_Menu(),
+						'fallback_cb'    => false,
+					));
+					?>
 				</li>
+				<?php endif; ?>
+				
+				<?php
+				// Display language switcher as last item
+				if (function_exists('selfscan_render_language_switcher')) {
+					selfscan_render_language_switcher('mobile');
+				} ?>
 			</ul>
 		</div>
 		

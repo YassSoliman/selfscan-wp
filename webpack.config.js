@@ -5,6 +5,8 @@ module.exports = {
   mode: 'development', // or 'production'
   entry: {
     main: './src/js/main.js',
+    'customizer-controls': './src/js/customizer-controls.js',
+    'customizer-preview': './src/js/customizer-preview.js',
   },
   output: {
     filename: 'js/[name].js',

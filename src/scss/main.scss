@@ -8,6 +8,9 @@ Version: 1.0.0
 // Import font definitions
 @use 'fonts';
 
+// Import language switcher styles
+@use 'language-switcher';
+
 * {
     padding: 0;
     margin: 0;
@@ -252,7 +255,6 @@ Version: 1.0.0
   .top-section {
     background: #000;
     padding-block: 1.3125rem;
-    margin-bottom: 1.875rem;
   }
   .top-section__container {
     color: #fff;
@@ -318,6 +320,12 @@ Version: 1.0.0
   @media (max-width: 768px) {
     .header {
       margin-top: 1rem;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .header__wrapper {
+      margin-top: 1.875rem;
     }
   }
   
@@ -1316,6 +1324,7 @@ Version: 1.0.0
   @media (any-hover: hover) {
     .footer-menu__link:hover {
       text-decoration: underline;
+      color: #fff;
     }
   }
   
