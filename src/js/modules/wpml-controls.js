@@ -49,14 +49,47 @@ export default function initWpmlControls() {
 				},
 				success: function(response) {
 					if (response.success) {
-						// Update the customizer values for the new language
+						// Store current language globally
+						window.wpmlCurrentLanguage = language;
+						
+						// Show/hide appropriate language fields using proper ID selectors
+						var defaultLang = wpmlCustomizer.defaultLang || 'en';
+						
+						// Hide ALL multilingual fields first (both default and language-specific)
+						$('#customize-control-footer_text').css('display', 'none');
+						$('#customize-control-copyright_text').css('display', 'none');
+						$('[id^="customize-control-footer_text_"]').css('display', 'none');
+						$('[id^="customize-control-copyright_text_"]').css('display', 'none');
+						
+						if (language === defaultLang) {
+							// Show only default language fields
+							$('#customize-control-footer_text').css('display', 'block');
+							$('#customize-control-copyright_text').css('display', 'block');
+						} else {
+							// Show only current language fields
+							$('#customize-control-footer_text_' + language).css('display', 'block');
+							$('#customize-control-copyright_text_' + language).css('display', 'block');
+						}
+						
+						// Update the input field values directly using DOM manipulation
 						$.each(response.data.values, function(settingId, value) {
-							var setting = api(settingId);
-							if (setting) {
-								setting.set(value);
+							// Find the actual input/textarea element for this setting
+							var $input = $('#customize-control-' + settingId + ' input, #customize-control-' + settingId + ' textarea');
+							
+							if ($input.length) {
+								// Set the value directly
+								$input.val(value);
+								
+								// Trigger events to notify Customizer of the change
+								$input.trigger('input').trigger('change');
+								
+								// Also update the Customizer API setting if it exists
+								var setting = api(settingId);
+								if (setting) {
+									setting.set(value);
+								}
 							}
 						});
-						
 						
 						// Update the preview URL for the new language
 						var previewUrl = buildLanguageUrl(language);
@@ -69,6 +102,9 @@ export default function initWpmlControls() {
 						
 						// Update current language indicator
 						$container.find('.current-language').text(language.toUpperCase());
+						
+						// Trigger custom event for other components
+						$(document).trigger('wpml:language-changed', [language]);
 					} else {
 						alert('Failed to switch language: ' + (response.data || 'Unknown error'));
 						$notice.hide();
@@ -113,12 +149,40 @@ export default function initWpmlControls() {
 		 */
 		function initLanguageSwitcher() {
 			var currentLang = wpmlCustomizer.currentLanguage || 'en';
+			var defaultLang = wpmlCustomizer.defaultLang || 'en';
 			
 			// Set active button
 			$('.wpml-lang-button[data-language="' + currentLang + '"]').addClass('active');
 			
 			// Update current language indicator
 			$('.current-language').text(currentLang.toUpperCase());
+			
+			// Handle initial field visibility and values
+			if (currentLang !== defaultLang) {
+				// Hide default language fields
+				$('#customize-control-footer_text, #customize-control-copyright_text').css('display', 'none');
+				
+				// Show current language fields
+				$('#customize-control-footer_text_' + currentLang + ', #customize-control-copyright_text_' + currentLang).css('display', 'block');
+				
+				// Load correct values for current language fields
+				var footerTextValue = api('footer_text_' + currentLang) ? api('footer_text_' + currentLang).get() : '';
+				var copyrightTextValue = api('copyright_text_' + currentLang) ? api('copyright_text_' + currentLang).get() : '';
+				
+				// Update field values if they exist
+				if (footerTextValue && $('#customize-control-footer_text_' + currentLang + ' textarea').length) {
+					$('#customize-control-footer_text_' + currentLang + ' textarea').val(footerTextValue);
+				}
+				if (copyrightTextValue && $('#customize-control-copyright_text_' + currentLang + ' input').length) {
+					$('#customize-control-copyright_text_' + currentLang + ' input').val(copyrightTextValue);
+				}
+			} else {
+				// For default language, make sure default fields are visible
+				$('#customize-control-footer_text, #customize-control-copyright_text').css('display', 'block');
+				
+				// Hide all language-specific fields
+				$('[id*="customize-control-footer_text_"], [id*="customize-control-copyright_text_"]').css('display', 'none');
+			}
 		}
 		
 		// Initialize when DOM is ready

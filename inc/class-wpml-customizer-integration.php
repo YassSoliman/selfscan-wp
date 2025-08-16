@@ -22,11 +22,9 @@ class SelfScan_WPML_Customizer_Integration {
 	 */
 	public function __construct() {
 		add_action('customize_register', array($this, 'add_language_switcher'), 1);
+		add_action('customize_register', array($this, 'manage_multilingual_fields'), 20);
 		add_action('customize_controls_enqueue_scripts', array($this, 'enqueue_customizer_scripts'));
 		add_action('customize_preview_init', array($this, 'enqueue_preview_scripts'));
-		add_filter('customize_value_footer_text', array($this, 'filter_customizer_value'), 10, 2);
-		add_filter('customize_value_copyright_text', array($this, 'filter_customizer_value'), 10, 2);
-		add_action('customize_save_after', array($this, 'save_multilingual_options'));
 		add_action('wp_ajax_wpml_customizer_change_language', array($this, 'ajax_change_language'));
 	}
 	
@@ -128,66 +126,119 @@ class SelfScan_WPML_Customizer_Integration {
 	}
 	
 	/**
-	 * Filter customizer value based on selected language
+	 * Manage multilingual fields in customizer
 	 */
-	public function filter_customizer_value($value, $setting) {
-		if (!selfscan_is_wpml_active()) {
-			return $value;
-		}
-		
-		// Get current customizer language
-		$customizer_lang = get_option('wpml_customizer_language', ICL_LANGUAGE_CODE);
-		$default_lang = apply_filters('wpml_default_language', 'en');
-		
-		// Always check for language-specific value first
-		if ($customizer_lang !== $default_lang) {
-			$option_name = $setting->id . '_' . $customizer_lang;
-			$lang_value = get_theme_mod($option_name, '');
-			
-			// Return language-specific value if it exists, otherwise fall back to default
-			if (!empty($lang_value)) {
-				return $lang_value;
-			}
-			// If no translation exists, fall back to the default language value
-			return get_theme_mod($setting->id, $value);
-		}
-		
-		// For default language, return the base value
-		return $value;
-	}
-	
-	/**
-	 * Save multilingual options
-	 */
-	public function save_multilingual_options($wp_customize) {
+	public function manage_multilingual_fields($wp_customize) {
 		if (!selfscan_is_wpml_active()) {
 			return;
 		}
 		
-		$customizer_lang = get_option('wpml_customizer_language', ICL_LANGUAGE_CODE);
+		$languages = selfscan_get_wpml_languages();
 		$default_lang = apply_filters('wpml_default_language', 'en');
+		$current_lang = get_option('wpml_customizer_language', ICL_LANGUAGE_CODE);
 		
-		// List of multilingual settings
-		$multilingual_settings = array('footer_text', 'copyright_text');
+		// Multilingual fields to manage
+		$multilingual_fields = array(
+			'footer_text' => array(
+				'label' => 'Footer Text',
+				'type' => 'textarea',
+				'section' => 'selfscan_footer_section'
+			),
+			'copyright_text' => array(
+				'label' => 'Copyright Text', 
+				'type' => 'text',
+				'section' => 'selfscan_footer_section'
+			)
+		);
 		
-		foreach ($multilingual_settings as $setting_id) {
-			$setting = $wp_customize->get_setting($setting_id);
-			
-			if ($setting) {
-				$value = $setting->post_value();
+		foreach ($multilingual_fields as $field_id => $field_config) {
+			foreach ($languages as $lang) {
+				$lang_code = $lang['language_code'];
 				
-				if ($value !== null) {
-					// Save to language-specific option if not default language
-					if ($customizer_lang !== $default_lang) {
-						$option_name = $setting_id . '_' . $customizer_lang;
-						set_theme_mod($option_name, $value);
-						
-						// Don't update the base option for non-default languages
-						set_theme_mod($setting_id, get_theme_mod($setting_id));
-					}
+				// Skip default language (already registered in customizer.php)
+				if ($lang_code === $default_lang) {
+					continue;
 				}
+				
+				$setting_id = $field_id . '_' . $lang_code;
+				$lang_name = $lang['translated_name'];
+				
+				// Register setting
+				$wp_customize->add_setting(
+					$setting_id,
+					array(
+						'default'           => '',
+						'sanitize_callback' => 'wp_kses_post',
+						'transport'         => 'postMessage',
+					)
+				);
+				
+				// Register control with priority to ensure correct order (French fields appear first)
+				$priority = 10; // footer_text_fr priority (higher priority than English)
+				if ($field_id === 'copyright_text') {
+					$priority = 20; // copyright_text_fr priority (higher priority than English)
+				}
+				
+				$wp_customize->add_control(
+					$setting_id,
+					array(
+						'label'    => $field_config['label'] . ' (' . $lang_name . ')',
+						'section'  => $field_config['section'],
+						'settings' => $setting_id,
+						'type'     => $field_config['type'],
+						'priority' => $priority,
+					)
+				);
 			}
 		}
+		
+		// Add CSS classes for language-specific controls
+		add_action('customize_controls_print_styles', array($this, 'add_multilingual_control_styles'));
+	}
+	
+	/**
+	 * Add styles to hide/show language-specific controls
+	 */
+	public function add_multilingual_control_styles() {
+		if (!selfscan_is_wpml_active()) {
+			return;
+		}
+		
+		$languages = selfscan_get_wpml_languages();
+		$default_lang = apply_filters('wpml_default_language', 'en');
+		$current_lang = get_option('wpml_customizer_language', ICL_LANGUAGE_CODE);
+		
+		echo '<style>';
+		
+		// Hide all language-specific controls by default (removed !important)
+		foreach ($languages as $lang) {
+			$lang_code = $lang['language_code'];
+			if ($lang_code !== $default_lang) {
+				echo '#customize-control-footer_text_' . $lang_code . ',';
+				echo '#customize-control-copyright_text_' . $lang_code . ' { display: none; }' . "\n";
+			}
+		}
+		
+		// Show controls for current language (removed !important)
+		if ($current_lang !== $default_lang) {
+			echo '#customize-control-footer_text { display: none; }' . "\n";
+			echo '#customize-control-copyright_text { display: none; }' . "\n";
+			echo '#customize-control-footer_text_' . $current_lang . ',';
+			echo '#customize-control-copyright_text_' . $current_lang . ' { display: block; }' . "\n";
+		}
+		
+		// Add body class for language state
+		echo 'body { }' . "\n"; // Force body context
+		echo '.wpml-current-lang-' . $current_lang . ' .multilingual-field { opacity: 1; }' . "\n";
+		
+		echo '</style>';
+		
+		// Also add JavaScript to handle initial state
+		echo '<script>';
+		echo 'jQuery(document).ready(function($) {';
+		echo '  $("body").addClass("wpml-current-lang-' . $current_lang . '");';
+		echo '});';
+		echo '</script>';
 	}
 	
 	/**
@@ -216,14 +267,16 @@ class SelfScan_WPML_Customizer_Integration {
 		
 		foreach ($multilingual_settings as $setting_id) {
 			if ($language === $default_lang) {
+				// For default language, get base setting
 				$values[$setting_id] = get_theme_mod($setting_id, '');
 			} else {
-				$option_name = $setting_id . '_' . $language;
-				$values[$setting_id] = get_theme_mod($option_name, '');
+				// For other languages, get language-specific setting
+				$lang_setting_id = $setting_id . '_' . $language;
+				$values[$lang_setting_id] = get_theme_mod($lang_setting_id, '');
 				
 				// Fallback to default language value if translation doesn't exist
-				if (empty($values[$setting_id])) {
-					$values[$setting_id] = get_theme_mod($setting_id, '');
+				if (empty($values[$lang_setting_id])) {
+					$values[$lang_setting_id] = get_theme_mod($setting_id, '');
 				}
 			}
 		}
@@ -288,6 +341,7 @@ class SelfScan_WPML_Customizer_Integration {
 		// If no language code found in URL, assume default language
 		return apply_filters('wpml_default_language', 'en');
 	}
+	
 }
 
 // Initialize the class

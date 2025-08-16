@@ -116,6 +116,7 @@ function selfscan_customize_register( $wp_customize ) {
 			'section'  => 'selfscan_footer_section',
 			'settings' => 'footer_text',
 			'type'     => 'textarea',
+			'priority' => 20, // After French fields
 		)
 	);
 
@@ -136,6 +137,7 @@ function selfscan_customize_register( $wp_customize ) {
 			'section'  => 'selfscan_footer_section',
 			'settings' => 'copyright_text',
 			'type'     => 'text',
+			'priority' => 30, // After French fields
 		)
 	);
 
@@ -161,6 +163,7 @@ function selfscan_customize_register( $wp_customize ) {
 				'description' => __( 'Add partner logos to display in the footer. You can set custom width and height for each logo.', 'selfscan' ),
 				'section'     => 'selfscan_footer_section',
 				'settings'    => 'footer_partner_1',
+				'priority'    => 100, // Always appear at the bottom
 				'button_labels' => array(
 					'add'    => __( 'Add Partner Logo', 'selfscan' ),
 					'remove' => __( 'Remove Partner', 'selfscan' ),
