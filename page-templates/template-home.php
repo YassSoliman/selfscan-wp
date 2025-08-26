@@ -165,6 +165,116 @@ get_header();
     </div>
 </section>
 
+<?php
+// Reviews/Testimonials Section
+$testimonials = get_field('testimonials');
+$reviews_title = get_field('reviews_title');
+$reviews_subtitle = get_field('reviews_subtitle');
+
+if ($testimonials && !empty($testimonials)) :
+?>
+<section class='reviews section' aria-labelledby='reviews-title'>
+    <div class='reviews__container'>
+        <div class="reviews__header">
+            <h2 class="reviews__title title" id="reviews-title">
+                <?php echo esc_html($reviews_title ?: 'Trusted by Thousands of Canadians'); ?>
+            </h2>
+            <div class="reviews__subtitle">
+                <?php echo esc_html($reviews_subtitle ?: 'See what our customers are saying about their experience'); ?>
+            </div>
+        </div>
+        <div class="reviews__body">
+            <div class='reviews__swiper swiper'>
+                <div class='reviews__wrapper swiper-wrapper'>
+                    <?php foreach ($testimonials as $testimonial) : 
+                        $media_type = $testimonial['media_type'] ?? 'image';
+                        $is_video = ($media_type === 'video');
+                        $author_name = $testimonial['author_name'] ?? '';
+                        $author_job_title = $testimonial['author_job_title'] ?? '';
+                        $author_location = $testimonial['author_location'] ?? '';
+                        $testimonial_text = $testimonial['testimonial_text'] ?? '';
+                    ?>
+                    <div class='reviews__slide swiper-slide'>
+                        <div class="reviews__card">
+                            <div class="reviews__rating">
+                                <img src="<?php echo get_template_directory_uri(); ?>/img/main/rating.svg" loading="lazy" alt="rating">
+                            </div>
+                            <div class="reviews__text">
+                                <p><?php echo esc_html($testimonial_text); ?></p>
+                            </div>
+                            <div class="reviews__info">
+                                <?php if (!$is_video && !empty($testimonial['author_image'])) : ?>
+                                <div class="reviews__avatar">
+                                    <?php echo wp_get_attachment_image($testimonial['author_image'], 'thumbnail', false, ['alt' => esc_attr($author_name)]); ?>
+                                </div>
+                                <?php endif; ?>
+                                <div class="reviews__details">
+                                    <div class="reviews__name">
+                                        <?php echo esc_html($author_name); ?>
+                                    </div>
+                                    <div class="reviews__data<?php echo $is_video ? ' reviews__data-alt' : ''; ?>">
+                                        <div class="reviews__position">
+                                            <?php echo esc_html($author_job_title); ?><?php echo $is_video ? ',' : ''; ?>
+                                        </div>
+                                        <div class="reviews__location">
+                                            <?php echo esc_html($author_location); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php if ($is_video) : ?>
+                            <div class="reviews__video">
+                                <?php 
+                                $video_file = $testimonial['author_video'] ?? null;
+                                $video_url = $testimonial['author_video_url'] ?? '';
+                                
+                                if ($video_file && !empty($video_file)) {
+                                    $video_src = $video_file['url'] ?? '';
+                                    if ($video_src) {
+                                        echo '<video data-video-player playsinline controls>';
+                                        echo '<source src="' . esc_url($video_src) . '" type="' . esc_attr($video_file['mime_type'] ?? 'video/mp4') . '" />';
+                                        echo '</video>';
+                                    }
+                                } elseif ($video_url) {
+                                    // Handle different video types (YouTube, Vimeo, direct links)
+                                    if (strpos($video_url, 'youtube.com') !== false || strpos($video_url, 'youtu.be') !== false) {
+                                        // YouTube embed
+                                        $video_id = '';
+                                        if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $video_url, $matches)) {
+                                            $video_id = $matches[1];
+                                        }
+                                        if ($video_id) {
+                                            echo '<iframe src="https://www.youtube.com/embed/' . esc_attr($video_id) . '" frameborder="0" allowfullscreen></iframe>';
+                                        }
+                                    } elseif (strpos($video_url, 'vimeo.com') !== false) {
+                                        // Vimeo embed
+                                        $video_id = '';
+                                        if (preg_match('/vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|)(\d+)(?:$|\/|\?)/', $video_url, $matches)) {
+                                            $video_id = $matches[1];
+                                        }
+                                        if ($video_id) {
+                                            echo '<iframe src="https://player.vimeo.com/video/' . esc_attr($video_id) . '" frameborder="0" allowfullscreen></iframe>';
+                                        }
+                                    } else {
+                                        // Direct video link
+                                        echo '<video data-video-player playsinline controls>';
+                                        echo '<source src="' . esc_url($video_url) . '" type="video/mp4" />';
+                                        echo '</video>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
 <section class="how-works section" aria-labelledby="how-works-title">
     <div class="how-works__container">
         <div class="how-works__body body">

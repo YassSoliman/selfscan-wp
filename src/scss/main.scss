@@ -11,6 +11,11 @@ Version: 1.0.0
 // Import language switcher styles
 @use 'language-switcher';
 
+// Import module styles
+@use 'reviews';
+@use 'home-article';
+@use 'home-partners';
+
 * {
     padding: 0;
     margin: 0;
