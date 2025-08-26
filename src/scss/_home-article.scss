@@ -1,5 +1,10 @@
 // Home Article Section Styles
 .home-article {
+  padding-top: 120px;
+  
+  @media (max-width: 1440px) {
+    padding-top: calc(70px + 50 * (100vw - 320px) / 1120);
+  }
   .articles-blog-body__article {
     display: flex;
     align-items: flex-start;
