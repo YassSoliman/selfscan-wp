@@ -1,5 +1,11 @@
 // Reviews Section Styles
 .reviews {
+  padding-top: 120px;
+
+  @media (max-width: 1440px) {
+    padding-top: calc(70px + 50 * (100vw - 320px) / 1120);
+  }
+
   &__header {
     text-align: center;
     margin-bottom: 60px;
@@ -13,8 +19,9 @@
     margin-bottom: 0.5rem;
   }
 
-  &__slide {
+  &__slide.swiper-slide {
     height: auto;
+    align-self: stretch;
   }
 
   &__card {
@@ -33,6 +40,11 @@
 
   &__rating {
     margin-bottom: 24px;
+
+    img {
+      height: 1.6875rem; // 27px
+      width: auto;
+    }
 
     @media (max-width: 1440px) {
       margin-bottom: calc(20px + 4 * (100vw - 320px) / 1120);
@@ -93,6 +105,8 @@
   &__video {
     border-radius: 28px;
     overflow: hidden;
+    aspect-ratio: 16 / 9;
+    position: relative;
 
     @media (max-width: 1440px) {
       border-radius: calc(10px + 18 * (100vw - 320px) / 1120);
@@ -100,17 +114,47 @@
 
     video,
     iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: auto;
-      min-height: 200px;
+      height: 100%;
+      object-fit: cover;
     }
 
-    // Video player styles (simplified without external icons)
-    video,
-    iframe {
-      width: 100%;
-      height: auto;
-      min-height: 200px;
+    // Plyr custom controls
+    .plyr__controls__item.plyr__control {
+      background: url(../img/main/play-icon.svg) center/2.625rem 2.625rem no-repeat;
+      height: 2.625rem;
+      width: 2.625rem;
+    }
+
+    .plyr__controls__item.plyr__control.plyr__control--pressed {
+      background: url(../img/main/pause-icon.svg) center/2.625rem 2.625rem no-repeat;
+    }
+
+    .plyr__controls__item.plyr__control svg {
+      display: none;
+    }
+
+    .plyr__controls {
+      padding-bottom: 1.5rem;
+      padding-inline: 1.3125rem;
+    }
+
+    .plyr__controls .plyr__controls__item.plyr__time {
+      padding: 0.625rem 1.4375rem;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 1.875rem;
+      font-family: "Rubik", sans-serif;
+      font-weight: 400;
+      font-size: 18px;
+      color: #fff;
+      line-height: 150%;
+
+      @media (max-width: 1440px) {
+        font-size: calc(16px + 2 * (100vw - 320px) / 1120);
+      }
     }
   }
 }

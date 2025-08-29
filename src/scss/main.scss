@@ -1623,10 +1623,12 @@ Version: 1.0.0
   
   .pricing-details {
     padding-bottom: 120px;
+    padding-top: 120px;
   }
   @media (max-width: 1440px) {
     .pricing-details {
       padding-bottom: calc(70px + 50 * (100vw - 320px) / 1120);
+      padding-top: calc(70px + 50 * (100vw - 320px) / 1120);
     }
   }
   .pricing-details__body {

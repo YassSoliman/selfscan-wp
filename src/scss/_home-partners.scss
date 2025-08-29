@@ -1,6 +1,6 @@
 // Home Partners Section Styles
 .home-partners {
-  padding-top: 120px;
+  padding-top: 7.5rem; // 120px converted to REM
   
   @media (max-width: 1440px) {
     padding-top: calc(70px + 50 * (100vw - 320px) / 1120);
@@ -10,7 +10,7 @@
   }
 
   &__title {
-    margin-bottom: 40px;
+    margin-bottom: 2.5rem; // 40px converted to REM
     text-align: center;
 
     @media (max-width: 1440px) {
@@ -22,7 +22,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 40px;
+    gap: 2.5rem; // 40px converted to REM
     flex-wrap: wrap;
 
     @media (max-width: 1440px) {

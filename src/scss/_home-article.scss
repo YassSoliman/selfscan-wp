@@ -1,21 +1,21 @@
 // Home Article Section Styles
 .home-article {
-  padding-top: 120px;
+  padding-top: 3.75rem; // 60px converted to REM
   
   @media (max-width: 1440px) {
-    padding-top: calc(70px + 50 * (100vw - 320px) / 1120);
+    padding-top: calc(35px + 25 * (100vw - 320px) / 1120); // 35px + 25px responsive
   }
   .articles-blog-body__article {
     display: flex;
     align-items: flex-start;
-    padding: 48px;
-    border-radius: 28px;
+    padding: 3rem; // 48px converted to REM
+    border-radius: 1.75rem; // 28px converted to REM
     gap: 1.75rem;
     background: #fff;
 
     @media (max-width: 1440px) {
-      padding: calc(15px + 33 * (100vw - 320px) / 1120);
-      border-radius: calc(15px + 13 * (100vw - 320px) / 1120);
+      padding: calc(0.9375rem + 2.0625rem * (100vw - 20rem) / 70rem); // 15px + 33px converted
+      border-radius: calc(0.9375rem + 0.8125rem * (100vw - 20rem) / 70rem); // 15px + 13px converted
     }
 
     @media (max-width: 680px) {
@@ -24,32 +24,35 @@
     }
 
     &:not(:last-child) {
-      margin-bottom: 40px;
+      margin-bottom: 2.5rem; // 40px converted to REM
 
       @media (max-width: 1440px) {
-        margin-bottom: calc(30px + 10 * (100vw - 320px) / 1120);
+        margin-bottom: calc(1.875rem + 0.625rem * (100vw - 20rem) / 70rem); // 30px + 10px converted
       }
     }
 
     &-alt {
+      align-items: stretch; // Allow children to take full height
+      
       &:not(:last-child) {
         margin-bottom: 0;
       }
 
       .articles-blog-body__label {
-        font-size: 30px;
-        margin-bottom: 28px;
+        font-size: 1.875rem; // 30px converted to REM
+        margin-bottom: 1.75rem; // 28px converted to REM
 
         @media (max-width: 1440px) {
-          font-size: calc(22px + 8 * (100vw - 320px) / 1120);
-          margin-bottom: calc(20px + 8 * (100vw - 320px) / 1120);
+          font-size: calc(1.375rem + 0.5rem * (100vw - 20rem) / 70rem); // 22px + 8px converted
+          margin-bottom: calc(1.25rem + 0.5rem * (100vw - 20rem) / 70rem); // 20px + 8px converted
         }
       }
 
       .articles-blog-body__text {
-        font-size: 20px;
+        font-size: 1.25rem; // 20px converted to REM
         line-height: 150%;
-        margin-bottom: 28px;
+        margin-bottom: 1.75rem; // 28px converted to REM
+        color: #797979;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -57,21 +60,21 @@
         -webkit-box-orient: vertical;
 
         @media (max-width: 1440px) {
-          font-size: calc(16px + 4 * (100vw - 320px) / 1120);
-          margin-bottom: calc(20px + 8 * (100vw - 320px) / 1120);
+          font-size: calc(16px + 4 * (100vw - 320px) / 1120); // 16px + 4px responsive
+          margin-bottom: calc(20px + 8 * (100vw - 320px) / 1120); // 20px + 8px responsive
         }
       }
 
       .articles-blog-body__icon {
-        width: 18px;
-        height: 18px;
+        width: 1.125rem; // 18px converted to REM
+        height: 1.125rem; // 18px converted to REM
         display: flex;
         align-items: center;
         justify-content: center;
 
         svg {
-          width: 18px;
-          height: 18px;
+          width: 1.125rem; // 18px converted to REM
+          height: 1.125rem; // 18px converted to REM
         }
       }
 
@@ -80,20 +83,27 @@
       }
 
       .articles-blog-body__category {
-        font-size: 16px;
+        font-size: 1rem; // 16px converted to REM
         padding: 0.25rem 1rem;
 
         @media (max-width: 1440px) {
-          font-size: calc(14px + 2 * (100vw - 320px) / 1120);
+          font-size: calc(0.875rem + 0.125rem * (100vw - 20rem) / 70rem); // 14px + 2px converted
         }
       }
 
       .articles-blog-body__decor {
-        flex: 0 0 28.05%;
-        min-width: 17.5rem;
+        flex: 0 0 23.5625rem; // Fixed width: 377px from Figma
+        min-width: 23.5625rem;
+        overflow: hidden; // Prevent image overflow
+        border-radius: 1rem; // 16px from Figma
+        position: relative;
+        aspect-ratio: 1.45 / 1; // Enforce exact aspect ratio from Figma
+        height: 100%; // Dynamic height based on aspect ratio
 
-        @media (max-width: 340px) {
-          min-width: 16.25rem;
+        @media (max-width: 42.5rem) { // 680px converted
+          flex: 0 0 100%;
+          min-width: 100%;
+          height: 12.5rem; // Smaller on mobile
         }
       }
     }
@@ -101,6 +111,14 @@
 
   .articles-blog-body__info {
     flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 14.75rem; // 236px - ensures proper height for space-between layout
+
+    @media (max-width: 42.5rem) { 
+      width: 100%;
+    }
   }
 
   .articles-blog-body__link {
@@ -118,10 +136,10 @@
     &-alt {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 1.25rem; // 20px converted to REM
       justify-content: space-between;
 
-      @media (max-width: 680px) {
+      @media (max-width: 42.5rem) { // 680px converted
         flex-direction: column-reverse;
         align-items: flex-start;
       }
@@ -131,10 +149,10 @@
   .articles-blog-body__items {
     display: flex;
     flex-wrap: wrap;
-    gap: 32px;
+    gap: 2rem; // 32px converted to REM
 
     @media (max-width: 1440px) {
-      gap: calc(20px + 12 * (100vw - 320px) / 1120);
+      gap: calc(1.25rem + 0.75rem * (100vw - 20rem) / 70rem); // 20px + 12px converted
     }
   }
 
@@ -146,16 +164,12 @@
   }
 
   .articles-blog-body__button {
-    @media (max-width: 420px) {
+    @media (max-width: 42.5rem) { // 420px converted
       width: 100%;
       text-align: center;
     }
   }
 
-  .articles-blog-body__decor {
-    flex: 0 0 42.62%;
-    position: relative;
-  }
 
   .articles-blog-body__category {
     position: absolute;
@@ -176,14 +190,16 @@
   }
 
   .articles-blog-body__image {
-    display: inline-block;
-    border-radius: 1rem;
-    overflow: hidden;
+    display: block; // Changed from inline-block for better control
+    width: 100%;
+    height: 100%;
 
     img {
       width: 100%;
-      height: auto;
+      height: 100%;
       object-fit: cover;
+      object-position: center;
+      aspect-ratio: 1.45 / 1; // Enforce exact aspect ratio matching container
     }
   }
 }

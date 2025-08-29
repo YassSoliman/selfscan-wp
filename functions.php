@@ -138,10 +138,14 @@ add_action( 'widgets_init', 'selfscan_widgets_init' );
  * Enqueue scripts and styles.
  */
 function selfscan_scripts() {
+	// Enqueue Plyr CSS and JS from CDN
+	wp_enqueue_style( 'plyr-css', 'https://cdn.plyr.io/3.7.8/plyr.css', array(), '3.7.8' );
+	wp_enqueue_script( 'plyr-js', 'https://cdn.plyr.io/3.7.8/plyr.polyfilled.js', array(), '3.7.8', true );
+	
 	// Check if compiled assets exist and use them
 	if ( file_exists( get_template_directory() . '/build/js/main.js' ) ) {
-		wp_enqueue_style( 'selfscan-main-style', get_template_directory_uri() . '/build/css/main.css', array(), filemtime( get_template_directory() . '/build/css/main.css' ) );
-		wp_enqueue_script( 'selfscan-main-js', get_template_directory_uri() . '/build/js/main.js', array(), filemtime( get_template_directory() . '/build/js/main.js' ), true );
+		wp_enqueue_style( 'selfscan-main-style', get_template_directory_uri() . '/build/css/main.css', array( 'plyr-css' ), filemtime( get_template_directory() . '/build/css/main.css' ) );
+		wp_enqueue_script( 'selfscan-main-js', get_template_directory_uri() . '/build/js/main.js', array( 'plyr-js' ), filemtime( get_template_directory() . '/build/js/main.js' ), true );
 	}
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {

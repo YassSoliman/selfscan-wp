@@ -70,101 +70,6 @@ get_header();
     </div>
 </section>
 
-<section class="about-home section" aria-labelledby="about-home-title">
-    <div class="about-home__container">
-        <div class="about-home__body body">
-            <h2 class="about-home__title title" id="about-home-title">
-                <?php echo wp_kses_post(get_field('about_title') ?: 'What is a Self Scan'); ?>
-            </h2>
-            <div class="about-home__subtitle">
-                <?php echo esc_html(get_field('about_subtitle') ?: 'Official Name-Based RCMP Criminal Record Check'); ?>
-            </div>
-            <div class="about-home__content">
-                <div class="about-home__info">
-                    <div class="about-home__label">
-                        <?php echo esc_html(get_field('about_label') ?: 'SelfScan.ca partners with police detachments across Canada.'); ?>
-                    </div>
-                    <div class="about-home__text">
-                        <?php echo wp_kses_post(get_field('about_text') ?: '<p>A Criminal Record Check is a secure, government-authorized screening that shows whether an individual has a criminal history. It\'s often required for employment, volunteering, or licensing. With SelfScan, you can quickly and confidentially request your official Canadian criminal record check online—anywhere, anytime.</p>'); ?>
-                    </div>
-                    <div class="about-home__stats">
-                        <?php
-                        $key_points = get_field('about_key_points');
-                        if (!$key_points) {
-                            // Fallback stats if no ACF data
-                            ?>
-                            <dl class="about-home__item">
-                                <dt class="about-home__value">
-                                    <?php echo esc_html('$59.99'); ?>
-                                </dt>
-                                <dd class="about-home__description">
-                                    <?php echo esc_html('Name-Based RCMP Criminal Record Check'); ?>
-                                </dd>
-                            </dl>
-                            <dl class="about-home__item">
-                                <dt class="about-home__value">
-                                    <?php selfscan_inline_svg(get_template_directory_uri() . '/img/icons/clock.svg', ['class' => 'about-home__icon']); ?>
-                                </dt>
-                                <dd class="about-home__description">
-                                    <?php echo esc_html('Get Results Within the Hour'); ?>
-                                </dd>
-                            </dl>
-                            <?php
-                        } else {
-                            // Loop through ACF key points
-                            foreach ($key_points as $point) :
-                                $title = isset($point['title']) ? $point['title'] : '';
-                                $key_point = isset($point['key_point']) ? $point['key_point'] : [];
-                                
-                                if (!empty($key_point)) :
-                                    ?>
-                                    <dl class="about-home__item">
-                                        <dt class="about-home__value">
-                                            <?php 
-                                            // Check if this is a text or image key point
-                                            if (isset($key_point[0]['acf_fc_layout']) && $key_point[0]['acf_fc_layout'] == 'text_key_point') {
-                                                echo esc_html($key_point[0]['text']);
-                                            } elseif (isset($key_point[0]['acf_fc_layout']) && $key_point[0]['acf_fc_layout'] == 'image_key_point') {
-                                                $image_id = $key_point[0]['image'];
-                                                if ($image_id) {
-                                                    // Get the image URL to check if it's an SVG
-                                                    $image_url = wp_get_attachment_url($image_id);
-                                                    
-                                                    if ($image_url && pathinfo($image_url, PATHINFO_EXTENSION) === 'svg') {
-                                                        // It's an SVG, use inline_svg function
-                                                        selfscan_inline_svg($image_url, ['class' => 'about-home__icon']);
-                                                    } else {
-                                                        // Not an SVG, use the normal image tag
-                                                        echo wp_get_attachment_image($image_id, 'full', false, ['class' => 'about-home__icon']);
-                                                    }
-                                                } else {
-                                                    selfscan_inline_svg(get_template_directory_uri() . '/img/icons/clock.svg', ['class' => 'about-home__icon']);
-                                                }
-                                            }
-                                            ?>
-                                        </dt>
-                                        <dd class="about-home__description">
-                                            <?php echo esc_html($title); ?>
-                                        </dd>
-                                    </dl>
-                                    <?php
-                                endif;
-                            endforeach;
-                        }
-                        ?>
-                    </div>
-                </div>
-                <div class="about-home__decor">
-                    <?php 
-                    $about_image_id = get_field('about_image_id') ?: 21;
-                    echo wp_get_attachment_image($about_image_id, 'full', false, ['loading' => 'lazy', 'alt' => 'Map']);
-                    ?>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <?php
 // Reviews/Testimonials Section
 $testimonials = get_field('testimonials');
@@ -274,6 +179,101 @@ if ($testimonials && !empty($testimonials)) :
     </div>
 </section>
 <?php endif; ?>
+
+<section class="about-home section" aria-labelledby="about-home-title">
+    <div class="about-home__container">
+        <div class="about-home__body body">
+            <h2 class="about-home__title title" id="about-home-title">
+                <?php echo wp_kses_post(get_field('about_title') ?: 'What is a Self Scan'); ?>
+            </h2>
+            <div class="about-home__subtitle">
+                <?php echo esc_html(get_field('about_subtitle') ?: 'Official Name-Based RCMP Criminal Record Check'); ?>
+            </div>
+            <div class="about-home__content">
+                <div class="about-home__info">
+                    <div class="about-home__label">
+                        <?php echo esc_html(get_field('about_label') ?: 'SelfScan.ca partners with police detachments across Canada.'); ?>
+                    </div>
+                    <div class="about-home__text">
+                        <?php echo wp_kses_post(get_field('about_text') ?: '<p>A Criminal Record Check is a secure, government-authorized screening that shows whether an individual has a criminal history. It\'s often required for employment, volunteering, or licensing. With SelfScan, you can quickly and confidentially request your official Canadian criminal record check online—anywhere, anytime.</p>'); ?>
+                    </div>
+                    <div class="about-home__stats">
+                        <?php
+                        $key_points = get_field('about_key_points');
+                        if (!$key_points) {
+                            // Fallback stats if no ACF data
+                            ?>
+                            <dl class="about-home__item">
+                                <dt class="about-home__value">
+                                    <?php echo esc_html('$59.99'); ?>
+                                </dt>
+                                <dd class="about-home__description">
+                                    <?php echo esc_html('Name-Based RCMP Criminal Record Check'); ?>
+                                </dd>
+                            </dl>
+                            <dl class="about-home__item">
+                                <dt class="about-home__value">
+                                    <?php selfscan_inline_svg(get_template_directory_uri() . '/img/icons/clock.svg', ['class' => 'about-home__icon']); ?>
+                                </dt>
+                                <dd class="about-home__description">
+                                    <?php echo esc_html('Get Results Within the Hour'); ?>
+                                </dd>
+                            </dl>
+                            <?php
+                        } else {
+                            // Loop through ACF key points
+                            foreach ($key_points as $point) :
+                                $title = isset($point['title']) ? $point['title'] : '';
+                                $key_point = isset($point['key_point']) ? $point['key_point'] : [];
+                                
+                                if (!empty($key_point)) :
+                                    ?>
+                                    <dl class="about-home__item">
+                                        <dt class="about-home__value">
+                                            <?php 
+                                            // Check if this is a text or image key point
+                                            if (isset($key_point[0]['acf_fc_layout']) && $key_point[0]['acf_fc_layout'] == 'text_key_point') {
+                                                echo esc_html($key_point[0]['text']);
+                                            } elseif (isset($key_point[0]['acf_fc_layout']) && $key_point[0]['acf_fc_layout'] == 'image_key_point') {
+                                                $image_id = $key_point[0]['image'];
+                                                if ($image_id) {
+                                                    // Get the image URL to check if it's an SVG
+                                                    $image_url = wp_get_attachment_url($image_id);
+                                                    
+                                                    if ($image_url && pathinfo($image_url, PATHINFO_EXTENSION) === 'svg') {
+                                                        // It's an SVG, use inline_svg function
+                                                        selfscan_inline_svg($image_url, ['class' => 'about-home__icon']);
+                                                    } else {
+                                                        // Not an SVG, use the normal image tag
+                                                        echo wp_get_attachment_image($image_id, 'full', false, ['class' => 'about-home__icon']);
+                                                    }
+                                                } else {
+                                                    selfscan_inline_svg(get_template_directory_uri() . '/img/icons/clock.svg', ['class' => 'about-home__icon']);
+                                                }
+                                            }
+                                            ?>
+                                        </dt>
+                                        <dd class="about-home__description">
+                                            <?php echo esc_html($title); ?>
+                                        </dd>
+                                    </dl>
+                                    <?php
+                                endif;
+                            endforeach;
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="about-home__decor">
+                    <?php 
+                    $about_image_id = get_field('about_image_id') ?: 21;
+                    echo wp_get_attachment_image($about_image_id, 'full', false, ['loading' => 'lazy', 'alt' => 'Map']);
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section class="how-works section" aria-labelledby="how-works-title">
     <div class="how-works__container">
