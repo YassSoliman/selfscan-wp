@@ -127,3 +127,5 @@ The theme uses Webpack for asset compilation with multiple entry points:
 - Advanced Custom Fields (ACF) plugin for full functionality
 - WPML plugin for multilingual functionality (optional - degrades gracefully)
 - Node.js and npm for development
+- This project URL is : http://localhost:10008/blog/\
+The admin login url for this project is : http://localhost:10008/wp-admin/?localwp_auto_login=1

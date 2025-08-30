@@ -146,6 +146,12 @@ function selfscan_scripts() {
 	if ( file_exists( get_template_directory() . '/build/js/main.js' ) ) {
 		wp_enqueue_style( 'selfscan-main-style', get_template_directory_uri() . '/build/css/main.css', array( 'plyr-css' ), filemtime( get_template_directory() . '/build/css/main.css' ) );
 		wp_enqueue_script( 'selfscan-main-js', get_template_directory_uri() . '/build/js/main.js', array( 'plyr-js' ), filemtime( get_template_directory() . '/build/js/main.js' ), true );
+		
+		// Localize script for AJAX
+		wp_localize_script( 'selfscan-main-js', 'wp_ajax_object', array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'nonce' => wp_create_nonce( 'load_more_articles' )
+		));
 	}
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -273,3 +279,127 @@ function selfscan_get_attachment_image() {
 }
 add_action('wp_ajax_get_attachment_image', 'selfscan_get_attachment_image');
 add_action('wp_ajax_nopriv_get_attachment_image', 'selfscan_get_attachment_image');
+
+/**
+ * AJAX handler for loading more articles
+ */
+function selfscan_load_more_articles() {
+    // Verify nonce for security
+    if (!wp_verify_nonce($_POST['nonce'], 'load_more_articles')) {
+        wp_send_json_error('Invalid nonce');
+        return;
+    }
+    
+    $offset = intval($_POST['offset']);
+    $posts_per_page = 3; // Load 3 more articles at a time
+    
+    $posts_query = new WP_Query([
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => $posts_per_page,
+        'offset' => $offset,
+        'meta_query' => [
+            [
+                'key' => '_thumbnail_id',
+                'compare' => 'EXISTS'
+            ]
+        ]
+    ]);
+    
+    if ($posts_query->have_posts()) {
+        ob_start();
+        
+        while ($posts_query->have_posts()) {
+            $posts_query->the_post();
+            $primary_category = selfscan_get_primary_category();
+            ?>
+            <article class="articles-blog-body__article" onclick="window.location.href='<?php echo esc_url(get_permalink()); ?>'">
+                <div class="articles-blog-body__info">
+                    <div class="articles-blog-body__link">
+                        <h3 class="articles-blog-body__label">
+                            <?php the_title(); ?>
+                        </h3>
+                    </div>
+                    <div class="articles-blog-body__text">
+                        <?php echo esc_html(selfscan_get_excerpt(25)); ?>
+                    </div>
+                    <div class="articles-blog-body__footer">
+                        <div class="articles-blog-body__items">
+                            <div class="articles-blog-body__item" data-article-autor>
+                                <div class="articles-blog-body__icon">
+                                    <img src="<?php echo esc_url(get_template_directory_uri() . '/img/icons/autor-icon.svg'); ?>" alt="">
+                                </div>
+                                <div class="articles-blog-body__value">
+                                    <?php the_author(); ?>
+                                </div>
+                            </div>
+                            <div class="articles-blog-body__item" data-article-date-published>
+                                <div class="articles-blog-body__icon">
+                                    <img src="<?php echo esc_url(get_template_directory_uri() . '/img/icons/date-icon.svg'); ?>" alt="">
+                                </div>
+                                <div class="articles-blog-body__value">
+                                    <time datetime="<?php echo esc_attr(get_the_date('c')); ?>">
+                                        <?php echo esc_html(get_the_date('F j, Y')); ?>
+                                    </time>
+                                </div>
+                            </div>
+                            <div class="articles-blog-body__item" data-article-reading-time>
+                                <div class="articles-blog-body__value">
+                                    <?php echo esc_html(selfscan_get_reading_time()); ?> min read
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="articles-blog-body__decor">
+                    <?php if ($primary_category) : ?>
+                        <a href="<?php echo esc_url(get_category_link($primary_category->term_id)); ?>" class="articles-blog-body__category" onclick="event.stopPropagation();">
+                            <?php echo esc_html($primary_category->name); ?>
+                        </a>
+                    <?php endif; ?>
+                    <div class="articles-blog-body__image">
+                        <?php if (has_post_thumbnail()) : ?>
+                            <?php the_post_thumbnail('medium', ['loading' => 'lazy', 'alt' => 'article-image']); ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </article>
+            <?php
+        }
+        
+        $articles_html = ob_get_clean();
+        wp_reset_postdata();
+        
+        // Check if there are more posts
+        $new_offset = $offset + $posts_per_page;
+        $next_posts_query = new WP_Query([
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'posts_per_page' => 1,
+            'offset' => $new_offset,
+            'meta_query' => [
+                [
+                    'key' => '_thumbnail_id',
+                    'compare' => 'EXISTS'
+                ]
+            ]
+        ]);
+        
+        $has_more = $next_posts_query->have_posts();
+        wp_reset_postdata();
+        
+        wp_send_json_success([
+            'html' => $articles_html,
+            'new_offset' => $new_offset,
+            'has_more' => $has_more
+        ]);
+    } else {
+        wp_send_json_success([
+            'html' => '',
+            'new_offset' => $offset,
+            'has_more' => false
+        ]);
+    }
+}
+add_action('wp_ajax_load_more_articles', 'selfscan_load_more_articles');
+add_action('wp_ajax_nopriv_load_more_articles', 'selfscan_load_more_articles');

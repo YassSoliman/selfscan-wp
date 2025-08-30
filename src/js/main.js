@@ -8,6 +8,7 @@ import initTracking from './tracking';
 import initAccordion from './accordion';
 import initLanguageSwitcher from './language-switcher';
 import initPlyr from './plyr';
+import './blog';
 
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {

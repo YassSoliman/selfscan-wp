@@ -13,74 +13,77 @@ get_header();
 <main id="primary" class="site-main">
     <?php while (have_posts()) : the_post(); ?>
         
-        <article id="post-<?php the_ID(); ?>" <?php post_class('single-post'); ?>>
-            <header class="single-post__header">
-                <div class="single-post__container">
-                    <?php 
-                    $primary_category = selfscan_get_primary_category();
-                    if ($primary_category) : ?>
-                        <span class="single-post__category">
-                            <?php echo esc_html($primary_category->name); ?>
-                        </span>
-                    <?php endif; ?>
+        <div class="single-post">
+            <div class="single-post__container">
+                <a href="<?php echo esc_url(home_url('/blog/')); ?>" class="single-post__button button button-grey">
+                    <span class="button__icon">
+                        <img src="<?php echo esc_url(get_template_directory_uri() . '/img/icons/arrow-right.svg'); ?>" alt="" style="transform: rotate(180deg);">
+                    </span>
+                    <span class="button__text button__text-big">
+                        Back to blog
+                    </span>
+                </a>
+            </div>
+
+            <div class="single-post__container single-post__container-inner">
+                <div class="single-post__body body body-big">
+                    <section class='single-post-hero' aria-labelledby='single-post-hero-title'>
+                        <div class="single-post-hero__header">
+                            <?php 
+                            $primary_category = selfscan_get_primary_category();
+                            if ($primary_category) : ?>
+                                <a href="<?php echo esc_url(get_category_link($primary_category->term_id)); ?>" class="single-post-hero__category">
+                                    <?php echo esc_html($primary_category->name); ?>
+                                </a>
+                            <?php endif; ?>
+                            <div class="single-post-hero__read-time">
+                                <span class="single-post-hero__read-time-value">
+                                    <?php echo esc_html(selfscan_get_reading_time()); ?>
+                                </span>
+                                min read
+                            </div>
+                        </div>
+                        <h1 class="single-post-hero__title title" id="single-post-hero-title">
+                            <?php the_title(); ?>
+                        </h1>
+                    </section>
                     
-                    <h1 class="single-post__title"><?php the_title(); ?></h1>
-                    
-                    <div class="single-post__meta">
-                        <div class="single-post__author">
-                            <?php echo selfscan_get_author_avatar(get_the_author_meta('ID'), 40); ?>
-                            <div class="single-post__author-info">
-                                <span class="single-post__author-name"><?php the_author(); ?></span>
-                                <div class="single-post__details">
-                                    <span class="single-post__date"><?php echo esc_html(selfscan_get_post_date()); ?></span>
-                                    <span class="single-post__separator">•</span>
-                                    <span class="single-post__read-time">
-                                        <?php printf(esc_html__('%d min read', 'selfscan'), selfscan_get_reading_time()); ?>
-                                    </span>
+                    <section class="content-single-post">
+                        <div class="content-single-post__article">
+                            <div class="header-content-single">
+                                <div class="header-content-single__info">
+                                    <div class="header-content-single__avatar">
+                                        <?php echo selfscan_get_author_avatar(get_the_author_meta('ID'), 48); ?>
+                                    </div>
+                                    <div class="header-content-single__details">
+                                        <div class="header-content-single__name">
+                                            <?php the_author(); ?>
+                                        </div>
+                                        <div class="header-content-single__date">
+                                            <div class="header-content-single__date-icon">
+                                                <img src="<?php echo esc_url(get_template_directory_uri() . '/img/icons/date-icon.svg'); ?>" alt="">
+                                            </div>
+                                            <div class="header-content-single__date-text">
+                                                <time datetime="<?php echo esc_attr(get_the_date('c')); ?>">
+                                                    <?php echo esc_html(get_the_date('F j, Y')); ?>
+                                                </time>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="header-content-single__actions">
+                                    <?php echo selfscan_get_share_buttons(); ?>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="single-post__share">
-                            <?php echo selfscan_get_share_buttons(); ?>
-                        </div>
-                    </div>
-                </div>
-            </header>
-            
-            <?php if (has_post_thumbnail()) : ?>
-                <div class="single-post__featured-image">
-                    <?php the_post_thumbnail('full', ['class' => 'single-post__image']); ?>
-                </div>
-            <?php endif; ?>
-            
-            <div class="single-post__content">
-                <div class="single-post__container">
-                    <div class="single-post__body">
-                        <?php the_content(); ?>
-                    </div>
-                </div>
-            </div>
-            
-            <?php
-            $tags = get_the_tags();
-            if ($tags) : ?>
-                <footer class="single-post__footer">
-                    <div class="single-post__container">
-                        <div class="single-post__tags">
-                            <span class="single-post__tags-label"><?php esc_html_e('Tags:', 'selfscan'); ?></span>
-                            <div class="single-post__tags-list">
-                                <?php foreach ($tags as $tag) : ?>
-                                    <a href="<?php echo esc_url(get_tag_link($tag->term_id)); ?>" class="single-post__tag">
-                                        #<?php echo esc_html($tag->name); ?>
-                                    </a>
-                                <?php endforeach; ?>
+                            
+                            <div class="content-single-post__items">
+                                <?php the_content(); ?>
                             </div>
                         </div>
-                    </div>
-                </footer>
-            <?php endif; ?>
-        </article>
+                    </section>
+                </div>
+            </div>
+        </div>
         
         <?php
         // Related posts section
@@ -130,42 +133,6 @@ get_header();
         <?php 
         wp_reset_postdata();
         endif; ?>
-        
-        <nav class="post-navigation">
-            <div class="post-navigation__container">
-                <?php
-                $prev_post = get_previous_post();
-                $next_post = get_next_post();
-                
-                if ($prev_post || $next_post) : ?>
-                    <div class="post-navigation__links">
-                        <?php if ($prev_post) : ?>
-                            <div class="post-navigation__prev">
-                                <a href="<?php echo esc_url(get_permalink($prev_post->ID)); ?>" class="post-navigation__link">
-                                    <span class="post-navigation__direction">
-                                        <img src="<?php echo esc_url(get_template_directory_uri() . '/img/icons/arrow-right.svg'); ?>" alt="" class="post-navigation__arrow post-navigation__arrow--prev">
-                                        <?php esc_html_e('Previous Article', 'selfscan'); ?>
-                                    </span>
-                                    <span class="post-navigation__title"><?php echo esc_html($prev_post->post_title); ?></span>
-                                </a>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <?php if ($next_post) : ?>
-                            <div class="post-navigation__next">
-                                <a href="<?php echo esc_url(get_permalink($next_post->ID)); ?>" class="post-navigation__link">
-                                    <span class="post-navigation__direction">
-                                        <?php esc_html_e('Next Article', 'selfscan'); ?>
-                                        <img src="<?php echo esc_url(get_template_directory_uri() . '/img/icons/arrow-right.svg'); ?>" alt="" class="post-navigation__arrow">
-                                    </span>
-                                    <span class="post-navigation__title"><?php echo esc_html($next_post->post_title); ?></span>
-                                </a>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </nav>
         
     <?php endwhile; ?>
 </main>
